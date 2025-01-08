@@ -1,0 +1,34 @@
+{
+    "City1": {
+      "location": {
+        "name": "City1",
+        "region": "Region1",
+        "country": "Country1",
+        "lat": 12.34,
+        "lon": 56.78,
+        "tz_id": "Region/City1",
+        "localtime": "2025-01-01 12:00"
+      },
+      "current": {
+        "temp_c": 25.0,
+        "condition": {"text": "Clear"},
+        "last_updated": "2025-01-01 12:00"
+      },
+      "forecast": {
+        "forecastday": [
+          {
+            "date": "2025-01-02",
+            "day": {
+              "maxtemp_c": 30.0,
+              "mintemp_c": 20.0,
+              "avgtemp_c": 25.0,
+              "totalprecip_mm": 5.0,
+              "maxwind_kph": 15.0,
+              "condition": {"text": "Sunny"}
+            }
+          }
+        ]
+      }
+    }
+  }
+  

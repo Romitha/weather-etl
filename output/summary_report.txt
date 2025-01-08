@@ -1,0 +1,33 @@
+Weather Analysis Summary
+========================================
+
+Temperature Analysis:
+
+City: Bangkok
+Current Temperature: 29.3°C
+Highest Temperature: 32.9°C on 2024-10-07
+Average Temperature Range: 25.7°C to 32.4°C
+
+City: Chiang Mai
+Current Temperature: 26.2°C
+Highest Temperature: 31.7°C on 2024-10-08
+Average Temperature Range: 20.6°C to 31.5°C
+
+City: Phuket
+Current Temperature: 28.2°C
+Highest Temperature: 29.0°C on 2024-10-08
+Average Temperature Range: 25.7°C to 28.7°C
+
+City: Pattaya
+Current Temperature: 26.9°C
+Highest Temperature: 30.6°C on 2024-10-07
+Average Temperature Range: 25.6°C to 30.0°C
+
+City: Hat Yai
+Current Temperature: 25.4°C
+Highest Temperature: 31.4°C on 2024-10-09
+Average Temperature Range: 23.5°C to 30.3°C
+
+Weather Alerts:
+City: Bangkok, Date: 2024-10-09, Alert: Heavy Rain, Value: 26.8mm
+City: Pattaya, Date: 2024-10-08, Alert: Heavy Rain, Value: 27.37mm

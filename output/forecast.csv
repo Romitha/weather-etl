@@ -1,0 +1,16 @@
+city,date,max_temp_c,min_temp_c,avg_temp_c,precipitation_mm,wind_kph,condition
+Bangkok,2024-10-07,32.9,25.5,28.7,1.09,10.8,Patchy rain nearby
+Bangkok,2024-10-08,32.2,25.7,28.7,7.81,11.5,Moderate rain
+Bangkok,2024-10-09,32.2,25.8,27.7,26.8,10.4,Heavy rain
+Chiang Mai,2024-10-07,31.1,20.7,25.0,4.79,4.3,Patchy rain nearby
+Chiang Mai,2024-10-08,31.7,20.5,24.9,2.39,6.8,Patchy rain nearby
+Chiang Mai,2024-10-09,31.6,20.6,24.8,5.19,6.1,Moderate rain
+Phuket,2024-10-07,28.2,25.3,26.7,4.56,18.7,Patchy rain nearby
+Phuket,2024-10-08,29.0,25.4,27.3,9.62,11.2,Moderate rain
+Phuket,2024-10-09,28.9,26.3,27.6,1.3,9.7,Patchy rain nearby
+Pattaya,2024-10-07,30.6,25.9,28.1,7.34,14.8,Moderate rain
+Pattaya,2024-10-08,29.8,25.3,27.6,27.37,15.8,Heavy rain
+Pattaya,2024-10-09,29.7,25.7,27.5,2.92,9.4,Patchy rain nearby
+Hat Yai,2024-10-07,28.2,23.2,25.3,7.48,10.8,Moderate rain
+Hat Yai,2024-10-08,31.2,23.5,26.7,8.64,9.0,Moderate rain
+Hat Yai,2024-10-09,31.4,23.8,26.6,13.12,5.8,Moderate rain

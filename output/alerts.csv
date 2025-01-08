@@ -1,0 +1,3 @@
+city,date,alert_type,value,threshold
+Bangkok,2024-10-09,Heavy Rain,26.8mm,> 25.0mm
+Pattaya,2024-10-08,Heavy Rain,27.37mm,> 25.0mm

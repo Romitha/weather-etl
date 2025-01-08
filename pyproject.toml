@@ -1,0 +1,40 @@
+[project]
+name = "weather-etl"
+version = "0.1.0"
+description = "creating an ETL pipeline using python to read data from the json file provided"
+authors = [
+    {name = "janith2011@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas (>=2.2.3,<3.0.0)",
+    "matplotlib (>=3.10.0,<4.0.0)",
+    "seaborn (>=0.13.2,<0.14.0)",
+    "python-dotenv (>=1.0.1,<2.0.0)",
+    "pytest (>=8.3.4,<9.0.0)",
+    "pytest-cov (>=6.0.0,<7.0.0)",
+    "pre-commit (>=4.0.1,<5.0.0)"
+]
+
+
+[tool.poetry.group.dev.dependencies]
+
+[tool.black]
+line_length = 120
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+
+[tool.interrogate]
+
+[tool.autopep8]
+
+[tool.pydocstyle]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
