@@ -13,6 +13,7 @@ from typing import Dict
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 from dotenv import load_dotenv
 
 from schema.data_class import CurrentWeather, Forecast, Location, WeatherData
@@ -267,56 +268,16 @@ class WeatherPipeline:
         self.logger.info("Starting visualization generation")
         try:
             Path(output_dir).mkdir(parents=True, exist_ok=True)
+            self.logger.info("Visualization generation for  current_temperature")
+            plt.figure(figsize=(10, 6))
+            sns.barplot(data=self.current_weather_df, x="city", y="temperature_c")
+            plt.title("Current Temperature by City")
+            plt.xticks(rotation=45)
+            plt.tight_layout()
+            plt.savefig(f"{output_dir}current_temperature.png")
+            plt.close()
 
-            # plt.figure(figsize=(10, 6))
-            # sns.barplot(data=self.current_weather_df, x='city', y='temperature_c')
-            # plt.title('Current Temperature by City')
-            # plt.xticks(rotation=45)
-            # plt.tight_layout()
-            # plt.savefig(f'{output_dir}current_temperature.png')
-            # plt.close()
-
-            # plt.figure(figsize=(10, 6))
-            # for city in self.forecast_df['city'].unique():
-            #     city_data = self.forecast_df[self.forecast_df['city'] == city]
-            #     plt.plot(city_data['date'], city_data['max_temp_c'], label=city)
-            # plt.title('Forecasted Maximum Temperatures')
-            # plt.xlabel('Date')
-            # plt.ylabel('Temperature (°C)')
-            # plt.legend()
-            # plt.xticks(rotation=45)
-            # plt.tight_layout()
-            # plt.savefig(f'{output_dir}forecast_trends.png')
-            # plt.close()
-
-            # self.logger.info("\nTemperature Analysis Summary:")
-            # self.logger.info(f"{self.temp_analysis_df}")
-
-            # # Add new visualization for temperature analysis
-            # # Create scatter plot
-            # plt.figure(figsize=(12, 6))
-            # plt.scatter(self.temp_analysis_df['current_temp'],
-            #         self.temp_analysis_df['highest_temp'],
-            #         alpha=0.6)
-
-            # # Add city labels
-            # for i, row in self.temp_analysis_df.iterrows():
-            #     plt.annotate(row['city'],
-            #                 (row['current_temp'], row['highest_temp']),
-            #                 xytext=(5, 5),
-            #                 textcoords='offset points',
-            #                 fontsize=10)
-
-            # # Add reference line
-            # plt.plot([0, 50], [0, 50], '--', color='gray', label='Current = Highest')
-            # plt.title('Current vs Highest Forecasted Temperature')
-            # plt.xlabel('Current Temperature (°C)')
-            # plt.ylabel('Highest Forecasted Temperature (°C)')
-            # plt.legend()
-            # plt.tight_layout()
-            # plt.savefig('output/temperature_comparison.png')
-            # plt.close()
-
+            self.logger.info("Visualization generation for  forecast_trends")
             plt.figure(figsize=(12, 6))
             plt.style.use("classic")
 
@@ -350,6 +311,7 @@ class WeatherPipeline:
             plt.savefig(f"{output_dir}forecast_trends.png", dpi=300, bbox_inches="tight")
             plt.close()
 
+            self.logger.info("Visualization generation for  temperature_comparison")
             plt.figure(figsize=(10, 8))
             plt.style.use("classic")
 
