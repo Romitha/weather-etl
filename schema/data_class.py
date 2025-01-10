@@ -11,23 +11,7 @@ logger = logging.getLogger("weather_pipeline")
 
 @dataclass
 class Location:
-    """Represents a geographical location with associated metadata.
-
-    :param name: The name of the location.
-    :type name: str
-    :param region: The region or state the location belongs to.
-    :type region: str
-    :param country: The country the location is in.
-    :type country: str
-    :param latitude: The latitude of the location.
-    :type latitude: float
-    :param longitude: The longitude of the location.
-    :type longitude: float
-    :param timezone: The timezone of the location.
-    :type timezone: str
-    :param last_updated: The timestamp of the last update for the location data.
-    :type last_updated: str
-    """
+    """Represents a geographical location with associated metadata."""
 
     name: str
     region: str
@@ -40,15 +24,7 @@ class Location:
 
 @dataclass
 class CurrentWeather:
-    """Represents the current weather conditions for a location.
-
-    :param temperature_c: The current temperature in Celsius.
-    :type temperature_c: float
-    :param condition_text: A textual description of the current weather condition.
-    :type condition_text: str
-    :param last_updated: The timestamp of the last update for the weather data.
-    :type last_updated: str
-    """
+    """Represents the current weather conditions for a location."""
 
     temperature_c: float
     condition_text: str
@@ -76,23 +52,7 @@ class CurrentWeather:
 
 @dataclass
 class Forecast:
-    """Represents a single day's weather forecast.
-
-    :param date: The date of the forecast.
-    :type date: str
-    :param max_temp_c: The maximum temperature in Celsius for the day.
-    :type max_temp_c: float
-    :param min_temp_c: The minimum temperature in Celsius for the day.
-    :type min_temp_c: float
-    :param avg_temp_c: The average temperature in Celsius for the day.
-    :type avg_temp_c: float
-    :param total_precip_mm: The total precipitation in millimeters for the day.
-    :type total_precip_mm: float
-    :param max_wind_kph: The maximum wind speed in kilometers per hour.
-    :type max_wind_kph: float
-    :param condition_text: A textual description of the day's weather condition.
-    :type condition_text: str
-    """
+    """Represents a single day's weather forecast."""
 
     date: str
     max_temp_c: float
@@ -130,15 +90,7 @@ class Forecast:
 
 @dataclass
 class WeatherData:
-    """Aggregates weather data, including location, current weather, and forecasts.
-
-    :param location: The location information.
-    :type location: Location
-    :param current_weather: The current weather conditions.
-    :type current_weather: CurrentWeather
-    :param forecasts: A list of weather forecasts for upcoming days.
-    :type forecasts: List[Forecast]
-    """
+    """Aggregates weather data, including location, current weather, and forecasts."""
 
     location: Location
     current_weather: CurrentWeather

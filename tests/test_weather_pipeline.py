@@ -6,22 +6,13 @@ from unittest.mock import mock_open, patch
 import pandas as pd
 import pytest
 
-from etl import WeatherPipeline
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from etl import WeatherPipeline
 
 
 @pytest.fixture
 def mock_json_data():
-    """Fixture that provides mock weather JSON data for testing the pipeline.
-
-    This mock data includes weather information for a city, including current weather,
-    location details, and forecast data. It is used to simulate an API response or
-    a JSON file that would be loaded in the `WeatherPipeline`.
-
-    Returns:
-        dict: A dictionary representing mock weather data for a city.
-    """
+    """Fixture that provides mock weather JSON data for testing the pipeline."""
     return {
         "City1": {
             "location": {
@@ -56,20 +47,7 @@ def mock_json_data():
 @pytest.fixture
 def mock_pipeline(mock_json_data):
     """Fixture that creates a mocked instance of the `WeatherPipeline` class
-    and simulates the ETL process.
-
-    This fixture mocks environment variables, file opening, and JSON loading
-    to ensure that the pipeline can be tested without real dependencies.
-    It also manually sets the DataFrames for current weather and forecast data
-    for testing purposes.
-
-    Args:
-        mock_json_data (dict): Mock weather JSON data to be used by the pipeline.
-
-    Returns:
-        WeatherPipeline: A mocked instance of the WeatherPipeline with mocked data
-                         and environment variables.
-    """
+    and simulates the ETL process."""
     # Mock the environment variables for the test
     with patch.dict(os.environ, {"HIGH_TEMP": "28.0", "HEAVY_RAIN": "4.0", "STRONG_WIND": "14.0"}):
         # Mock reading the JSON file
@@ -106,15 +84,7 @@ def mock_pipeline(mock_json_data):
 
 
 def test_extract_data(mock_pipeline):
-    """Test case for the `extract_data` method of the WeatherPipeline.
-
-    This test verifies that the `extract_data` method correctly extracts data
-    from the mocked JSON data and populates the `weather_data` attribute
-    of the pipeline.
-
-    Args:
-        mock_pipeline (WeatherPipeline): The mocked pipeline instance with pre-set data.
-    """
+    """Test case for the `extract_data` method of the WeatherPipeline."""
     assert len(mock_pipeline.weather_data) == 1
     assert "City1" in mock_pipeline.weather_data
     city_data = mock_pipeline.weather_data["City1"]
@@ -123,14 +93,7 @@ def test_extract_data(mock_pipeline):
 
 
 def test_transform_data(mock_pipeline):
-    """Test case for the `transform_data` method of the WeatherPipeline.
-
-    This test ensures that the `transform_data` method correctly transforms
-    the extracted data into DataFrames and that these DataFrames are not empty.
-
-    Args:
-        mock_pipeline (WeatherPipeline): The mocked pipeline instance with pre-set data.
-    """
+    """Test case for the `transform_data` method of the WeatherPipeline."""
     assert isinstance(mock_pipeline.current_weather_df, pd.DataFrame)
     assert isinstance(mock_pipeline.forecast_df, pd.DataFrame)
     assert not mock_pipeline.current_weather_df.empty
@@ -140,15 +103,7 @@ def test_transform_data(mock_pipeline):
 
 
 def test_analyze_temperatures(mock_pipeline):
-    """Test case for the `analyze_temperatures` method of the WeatherPipeline.
-
-    This test verifies that the `analyze_temperatures` method generates a DataFrame
-    containing the temperature analysis, including the highest temperature
-    for each city.
-
-    Args:
-        mock_pipeline (WeatherPipeline): The mocked pipeline instance with pre-set data.
-    """
+    """Test case for the `analyze_temperatures` method of the WeatherPipeline."""
     mock_pipeline.analyze_temperatures()
     assert isinstance(mock_pipeline.temp_analysis_df, pd.DataFrame)
     assert "city" in mock_pipeline.temp_analysis_df.columns
@@ -156,14 +111,7 @@ def test_analyze_temperatures(mock_pipeline):
 
 
 def test_generate_alerts(mock_pipeline):
-    """Test case for the `generate_alerts` method of the WeatherPipeline.
-
-    This test ensures that the `generate_alerts` method correctly generates alerts
-    based on predefined thresholds for high temperature, heavy rain, and strong wind.
-
-    Args:
-        mock_pipeline (WeatherPipeline): The mocked pipeline instance with pre-set data.
-    """
+    """Test case for the `generate_alerts` method of the WeatherPipeline."""
     mock_pipeline.THRESHOLDS = {"high_temp": 28.0, "heavy_rain": 4.0, "strong_wind": 14.0}
     mock_pipeline.generate_alerts()
     assert isinstance(mock_pipeline.alerts_df, pd.DataFrame)
@@ -172,22 +120,8 @@ def test_generate_alerts(mock_pipeline):
 
 
 def test_save_to_csv(mock_pipeline, tmp_path):
-    """Test case for the `save_to_csv` method of the WeatherPipeline.
-
-    This test verifies that the `save_to_csv` method correctly saves the
-    current weather data to a CSV file in the specified directory.
-
-    Args:
-        mock_pipeline (WeatherPipeline): The mocked pipeline instance with pre-set data.
-        tmp_path (Path): The temporary directory where the CSV file will be saved for testing.
-    """
+    """Test case for the `save_to_csv` method of the WeatherPipeline."""
     output_dir = tmp_path / "output"
-
-    # Ensure the output directory exists before saving
     output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Call the to_csv method on the mock_pipeline and specify the file path
     mock_pipeline.current_weather_df.to_csv(str(output_dir / "current_weather.csv"))
-
-    # Assert the files are saved in the correct directory
     assert (output_dir / "current_weather.csv").exists()

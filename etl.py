@@ -1,9 +1,4 @@
-"""ETL for weather analysis.
-
-This script defines a WeatherPipeline class that processes weather data
-from a JSON file, transforms it into structured data, performs analyses,
-and generates visualizations and reports.
-"""
+"""ETL for weather analysis."""
 import json
 import logging
 import os
@@ -51,11 +46,7 @@ class WeatherPipeline:
         self.logger = Logger.setup_logging()
 
     def extract_data(self):
-        """Extract and parse weather data from the JSON file.
-
-        Reads weather data, converts it into structured data classes,
-        and stores it in the pipeline's internal attributes.
-        """
+        """Extract and parse weather data from the JSON file."""
         self.logger.info("Starting data extraction")
         try:
             with open(self.json_file, "r") as file:
@@ -104,11 +95,7 @@ class WeatherPipeline:
             raise
 
     def transform_data(self):
-        """Transform raw weather data into structured DataFrames.
-
-        Converts extracted weather data into pandas DataFrames for further
-        analysis and visualization. Handles missing data where necessary.
-        """
+        """Transform raw weather data into structured DataFrames."""
         self.logger.info("Starting data transformation")
         try:
             current_data = []
@@ -166,11 +153,7 @@ class WeatherPipeline:
             raise
 
     def handle_missing_data(self):
-        """Handle missing data in the weather DataFrames.
-
-        Logs missing data information and applies forward-filling
-        to fill in missing values.
-        """
+        """Handle missing data in the weather DataFrames."""
         # Check for missing data in the current weather DataFrame
         current_weather_missing = self.current_weather_df.isna().sum()
         if current_weather_missing.any():
@@ -183,17 +166,12 @@ class WeatherPipeline:
             self.logger.warning("Missing values found in Forecast DataFrame:")
             self.logger.warning(f"{forecast_missing[forecast_missing > 0]}")
 
-        # Optionally, drop rows with missing values or fill them
-        # For example, forward fill missing data
+        # forward fill missing data
         self.current_weather_df.fillna(method="ffill", inplace=True)
         self.forecast_df.fillna(method="ffill", inplace=True)
 
     def generate_alerts(self):
-        """Generate weather alerts based on predefined thresholds.
-
-        Alerts are created for high temperature, heavy rain, and strong
-        wind conditions and stored in a DataFrame.
-        """
+        """Generate weather alerts based on predefined thresholds."""
         self.logger.info("Starting alert generation")
         try:
             alerts = []
@@ -241,11 +219,7 @@ class WeatherPipeline:
             raise
 
     def save_to_csv(self, output_dir="output/"):
-        """Save the transformed and analyzed data to CSV files.
-
-        :param output_dir: Directory path where CSV files will be saved.
-        :type output_dir: str
-        """
+        """Save the transformed and analyzed data to CSV files."""
         self.logger.info("Starting CSV export")
         try:
             Path(output_dir).mkdir(parents=True, exist_ok=True)
@@ -260,125 +234,117 @@ class WeatherPipeline:
             raise
 
     def create_visualizations(self, output_dir="output/"):
-        """Create and save visualizations of the weather data.
-
-        :param output_dir: Directory path where CSV files will be saved.
-        :type output_dir: str
-        """
+        """Create and save visualizations of the weather data."""
         self.logger.info("Starting visualization generation")
         try:
             Path(output_dir).mkdir(parents=True, exist_ok=True)
-            self.logger.info("Visualization generation for  current_temperature")
-            plt.figure(figsize=(10, 6))
-            sns.barplot(data=self.current_weather_df, x="city", y="temperature_c")
-            plt.title("Current Temperature by City")
-            plt.xticks(rotation=45)
-            plt.tight_layout()
-            plt.savefig(f"{output_dir}current_temperature.png")
-            plt.close()
-
-            self.logger.info("Visualization generation for  forecast_trends")
-            plt.figure(figsize=(12, 6))
-            plt.style.use("classic")
-
-            # Ensure dates are in datetime format
-            if not pd.api.types.is_datetime64_any_dtype(self.forecast_df["date"]):
-                self.forecast_df["date"] = pd.to_datetime(self.forecast_df["date"], format="%Y-%m-%d")
-
-            # Plot with corrected date handling
-            for city in self.forecast_df["city"].unique():
-                city_data = self.forecast_df[self.forecast_df["city"] == city]
-                plt.plot(city_data["date"], city_data["max_temp_c"], label=city, marker="o", linewidth=2, markersize=6)
-
-            # Improve date formatting on x-axis
-            ax = plt.gca()
-            ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
-            ax.xaxis.set_major_locator(mdates.DayLocator())
-
-            plt.title("Forecasted Maximum Temperatures", fontsize=14, pad=20)
-            plt.xlabel("Date", fontsize=12)
-            plt.ylabel("Temperature (°C)", fontsize=12)
-
-            # Format legend and put it outside the plot
-            plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
-
-            # Add grid
-            plt.grid(True, linestyle="--", alpha=0.7)
-
-            plt.xticks(rotation=30)
-            plt.tight_layout()
-
-            plt.savefig(f"{output_dir}forecast_trends.png", dpi=300, bbox_inches="tight")
-            plt.close()
-
-            self.logger.info("Visualization generation for  temperature_comparison")
-            plt.figure(figsize=(10, 8))
-            plt.style.use("classic")
-
-            # Create scatter plot with improved styling
-            plt.scatter(
-                self.temp_analysis_df["current_temp"],
-                self.temp_analysis_df["highest_temp"],
-                alpha=0.7,
-                s=100,
-            )
-
-            # Add city labels with better positioning
-            for i, row in self.temp_analysis_df.iterrows():
-                plt.annotate(
-                    row["city"],
-                    (row["current_temp"], row["highest_temp"]),
-                    xytext=(7, 7),
-                    textcoords="offset points",
-                    fontsize=11,
-                    bbox=dict(facecolor="white", edgecolor="none", alpha=0.7),
-                )
-
-            # Add reference line with better styling
-            plt.gca().set_aspect("equal")
-            max_temp = max(self.temp_analysis_df["current_temp"].max(), self.temp_analysis_df["highest_temp"].max())
-            plt.plot(
-                [0, max_temp],
-                [0, max_temp],
-                "--",
-                color="gray",
-                label="Current = Highest",
-                alpha=0.8,
-                linewidth=1.5,
-            )
-
-            # Improve axes and labels
-            plt.title("Current vs Highest Forecasted Temperature", fontsize=14, pad=20)
-            plt.xlabel("Current Temperature (°C)", fontsize=12)
-            plt.ylabel("Highest Forecasted Temperature (°C)", fontsize=12)
-
-            # Add grid
-            plt.grid(True, linestyle="--", alpha=0.3)
-
-            # Format legend
-            plt.legend(loc="lower right")
-
-            # Set limits slightly above max temperature
-            plt.xlim(20, max_temp + 2)
-            plt.ylim(20, max_temp + 2)
-
-            # Adjust layout
-            plt.tight_layout()
-
-            plt.savefig(f"{output_dir}temperature_comparison.png", dpi=300, bbox_inches="tight")
-            plt.close()
-
+            self.city_temperature_plot(output_dir)
+            self.forecast_trend_plot(output_dir)
+            self.temperature_comparison_plot(output_dir)
             self.logger.info("Visualization generation completed successfully")
         except Exception as e:
             self.logger.error(f"Error during visualization generation: {e}")
             raise
 
-    def analyze_temperatures(self):
-        """Analyze current and forecasted temperatures.
+    def city_temperature_plot(self, output_dir):
+        """Visualization generation for current temperature."""
+        self.logger.info("Visualization generation for current_temperature")
+        plt.figure(figsize=(10, 6))
+        sns.barplot(data=self.current_weather_df, x="city", y="temperature_c")
+        plt.title("Current Temperature by City")
+        plt.xticks(rotation=45)
+        self.save_plot(output_dir, "current_temperature.png", self.logger)
 
-        Compares current temperatures with forecasted temperatures,
-        calculates statistics, and identifies significant patterns.
-        """
+    def forecast_trend_plot(self, output_dir):
+        """Visualization generation for forecast trends."""
+        self.logger.info("Visualization generation for forecast_trends")
+        plt.figure(figsize=(12, 6))
+        plt.style.use("classic")
+
+        # Ensure dates are in datetime format
+        if not pd.api.types.is_datetime64_any_dtype(self.forecast_df["date"]):
+            self.forecast_df["date"] = pd.to_datetime(self.forecast_df["date"], format="%Y-%m-%d")
+
+        # Plot with corrected date handling
+        for city in self.forecast_df["city"].unique():
+            city_data = self.forecast_df[self.forecast_df["city"] == city]
+            plt.plot(city_data["date"], city_data["max_temp_c"], label=city, marker="o", linewidth=2, markersize=6)
+
+        # Improve date formatting on x-axis
+        ax = plt.gca()
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
+        ax.xaxis.set_major_locator(mdates.DayLocator())
+
+        plt.title("Forecasted Maximum Temperatures", fontsize=14, pad=20)
+        plt.xlabel("Date", fontsize=12)
+        plt.ylabel("Temperature (°C)", fontsize=12)
+        plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
+        plt.grid(True, linestyle="--", alpha=0.7)
+        plt.xticks(rotation=30)
+
+        self.save_plot(output_dir, "forecast_trends.png", self.logger)
+
+    def temperature_comparison_plot(self, output_dir):
+        """Visualization generation for temperature comparison."""
+        self.logger.info("Visualization generation for temperature_comparison")
+        plt.figure(figsize=(10, 8))
+        plt.style.use("classic")
+
+        # Create scatter plot with improved styling
+        plt.scatter(
+            self.temp_analysis_df["current_temp"],
+            self.temp_analysis_df["highest_temp"],
+            alpha=0.7,
+            s=100,
+        )
+
+        # Add city labels with better positioning
+        for i, row in self.temp_analysis_df.iterrows():
+            plt.annotate(
+                row["city"],
+                (row["current_temp"], row["highest_temp"]),
+                xytext=(7, 7),
+                textcoords="offset points",
+                fontsize=11,
+                bbox=dict(facecolor="white", edgecolor="none", alpha=0.7),
+            )
+
+        # Add reference line with better styling
+        plt.gca().set_aspect("equal")
+        max_temp = max(self.temp_analysis_df["current_temp"].max(), self.temp_analysis_df["highest_temp"].max())
+        plt.plot(
+            [0, max_temp],
+            [0, max_temp],
+            "--",
+            color="gray",
+            label="Current = Highest",
+            alpha=0.8,
+            linewidth=1.5,
+        )
+
+        plt.title("Current vs Highest Forecasted Temperature", fontsize=14, pad=20)
+        plt.xlabel("Current Temperature (°C)", fontsize=12)
+        plt.ylabel("Highest Forecasted Temperature (°C)", fontsize=12)
+        plt.grid(True, linestyle="--", alpha=0.3)
+        plt.legend(loc="lower right")
+        plt.xlim(20, max_temp + 2)
+        plt.ylim(20, max_temp + 2)
+
+        self.save_plot(output_dir, "temperature_comparison.png", self.logger)
+
+    def save_plot(self, output_dir, filename, logger):
+        """Save and close the current plot."""
+        try:
+            plt.tight_layout()
+            plt.savefig(f"{output_dir}/{filename}", dpi=300, bbox_inches="tight")
+            plt.close()
+            logger.info(f"Saved plot: {filename}")
+        except Exception as e:
+            logger.error(f"Failed to save plot {filename}: {e}")
+            raise
+
+    def analyze_temperatures(self):
+        """Analyze current and forecasted temperatures."""
         self.logger.info("Starting temperature analysis")
         try:
             # Compare current vs forecast temperatures
@@ -423,11 +389,7 @@ class WeatherPipeline:
             raise
 
     def generate_summary_report(self):
-        """Generate a summary report of the weather analysis.
-
-        Creates a text report summarizing the temperature analysis
-        and any generated alerts.
-        """
+        """Generate a summary report of the weather analysis."""
         self.logger.info("Starting summary report generation")
         try:
             report = "Weather Analysis Summary\n"
@@ -459,11 +421,7 @@ class WeatherPipeline:
 
 
 def main():
-    """Entry point for executing the weather pipeline.
-
-    This function sets up the pipeline, processes the weather data,generates
-    visualizations, and creates reports.
-    """
+    """Entry point for executing the weather pipeline."""
     logger = logging.getLogger("weather_pipeline")
     try:
         logger.info("Pipeline execution started")

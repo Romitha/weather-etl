@@ -1,7 +1,4 @@
-"""Module provides a logging utility for configuring and managing log outputs.
-
-for the weather pipeline application.
-"""
+"""Module provides a logging utility for configuring and managing log outputs."""
 import logging
 
 
@@ -12,10 +9,6 @@ class Logger:
     @staticmethod
     def setup_logging():
         """Configure and initializes logging for the weather pipeline.
-
-        Sets up a logger with both a file handler and a console handler,
-        each with appropriate formatting. The logger outputs messages to
-        a log file and the console for better monitoring.
 
         :return: A configured logger instance.
         :rtype: logging.Logger
